@@ -3,7 +3,7 @@
     "type": "library",
     "description": "PHP LinkedIn SDK",
     "keywords": ["linkedin","rest","api","api client"],
-    "homepage": "https://github.com/redinkdesign/PHP-LinkedIn-SDK",
+    "homepage": "https://github.com/ashwinks/PHP-LinkedIn-SDK",
     "license": "MIT",
     "authors": [
         {
