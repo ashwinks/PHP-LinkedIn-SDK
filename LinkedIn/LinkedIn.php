@@ -274,8 +274,9 @@
 
             if (!empty($payload)){
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = http_build_query($payload);
+                $options[CURLOPT_POSTFIELDS] = json_encode($payload); // Json encode payload
                 $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
+                $headers[] = 'Content-Type: application/json'; //Set Content-Type header to application/json
                 $options[CURLOPT_HTTPHEADER] = $headers;
             }
             
