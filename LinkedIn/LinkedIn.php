@@ -22,6 +22,11 @@
         const SCOPE_READ_WRTIE_UPDATES = 'rw_nus'; // Retrieve and post updates to LinkedIn as you
         const SCOPE_READ_WRITE_GROUPS = 'rw_groups'; // Retrieve and post group discussions as you
         const SCOPE_WRITE_MESSAGES = 'w_messages'; // Send messages and invitations to connect as you
+
+        const HTTP_METHOD_GET = 'GET';
+        const HTTP_METHOD_POST = 'POST';
+        const HTTP_METHOD_PUT = 'PUT';
+        const HTTP_METHOD_DELETE = 'DELETE';
         
         /**
          * @param array $config (api_key, api_secret, callback_url)
@@ -103,7 +108,7 @@
             /** Temp bug fix as per https://developer.linkedin.com/comment/28938#comment-28938 **/
             $tmp_params = http_build_query($params);
 
-            $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken?' . $tmp_params, array(), 'POST', array('x-li-format: json'));
+            $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken?' . $tmp_params, array(), self::HTTP_METHOD_POST, array('x-li-format: json'));
             if (isset($data['error']) && !empty($data['error'])){
                 throw new \RuntimeException('Access Token Request Error: ' . $data['error'] . ' -- ' . $data['error_description']);
             }
@@ -186,7 +191,7 @@
          */
         public function post($endpoint, array $payload = array()){
              
-            return $this->fetch($endpoint, $payload, 'POST');
+            return $this->fetch($endpoint, $payload, self::HTTP_METHOD_POST);
              
         }
          
@@ -212,7 +217,7 @@
          */
         public function put($endpoint, array $payload = array()){
              
-            return $this->fetch($endpoint, $payload, 'PUT');
+            return $this->fetch($endpoint, $payload, self::HTTP_METHOD_PUT);
              
         }
         
@@ -230,7 +235,7 @@
          */
         public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array()){
             
-            $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . (!empty($this->_access_token)? '?oauth2_access_token=' . $this->getAccessToken() : '');
+            $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . '?oauth2_access_token=' . $this->getAccessToken();
             $headers[] = 'x-li-format: json';
             
             return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);
@@ -273,11 +278,15 @@
             );
 
             if (!empty($payload)){
-                $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = json_encode($payload); // Json encode payload
-                $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
-                $headers[] = 'Content-Type: application/json'; //Set Content-Type header to application/json
-                $options[CURLOPT_HTTPHEADER] = $headers;
+                if ($options[CURLOPT_CUSTOMREQUEST] == self::HTTP_METHOD_POST || $options[CURLOPT_CUSTOMREQUEST] == self::HTTP_METHOD_PUT){
+                    $options[CURLOPT_POST] = true;
+                    $options[CURLOPT_POSTFIELDS] = json_encode($payload); // Json encode payload
+                    $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
+                    $headers[] = 'Content-Type: application/json'; //Set Content-Type header to application/json
+                    $options[CURLOPT_HTTPHEADER] = $headers;
+                }else{
+                    $options['CURLOPT_URL'] .= http_build_query($payload);
+                }
             }
             
             if (!empty($curl_options)){
