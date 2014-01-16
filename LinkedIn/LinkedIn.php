@@ -285,7 +285,7 @@
                     $headers[] = 'Content-Type: application/json'; //Set Content-Type header to application/json
                     $options[CURLOPT_HTTPHEADER] = $headers;
                 }else{
-                    $options['CURLOPT_URL'] .= http_build_query($payload);
+                    $options['CURLOPT_URL'] .= http_build_query($payload); // we assume there is already a ? in the request url
                 }
             }
             
