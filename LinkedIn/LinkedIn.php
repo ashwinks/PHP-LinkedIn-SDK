@@ -280,12 +280,12 @@
             if (!empty($payload)){
                 if ($options[CURLOPT_CUSTOMREQUEST] == self::HTTP_METHOD_POST || $options[CURLOPT_CUSTOMREQUEST] == self::HTTP_METHOD_PUT){
                     $options[CURLOPT_POST] = true;
-                    $options[CURLOPT_POSTFIELDS] = json_encode($payload); // Json encode payload
+                    $options[CURLOPT_POSTFIELDS] = json_encode($payload);
                     $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
-                    $headers[] = 'Content-Type: application/json'; //Set Content-Type header to application/json
+                    $headers[] = 'Content-Type: application/json';
                     $options[CURLOPT_HTTPHEADER] = $headers;
                 }else{
-                    $options[CURLOPT_URL] .= http_build_query($payload,'&'); // we assume there is already a ? in the request url
+                    $options[CURLOPT_URL] .= '&' . http_build_query($payload, '&');
                 }
             }
             
