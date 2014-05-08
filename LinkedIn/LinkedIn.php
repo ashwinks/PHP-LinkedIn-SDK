@@ -281,6 +281,10 @@ class LinkedIn
             $options = array_replace($options, $curl_options);
         }
 
+        if (isset($this->_config['curl_options']) && !empty($this->_config['curl_options'])) {
+            $options = array_replace($options, $this->_config['curl_options']);
+        }
+
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
         $this->_debug_info = curl_getinfo($ch);
