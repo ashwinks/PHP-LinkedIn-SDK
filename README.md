@@ -40,3 +40,17 @@ Make a request to the API
 ```php
 $info = $li->get('/people/~:(first-name,last-name,positions)');
 ```
+
+Overwrite curl options :
+```php
+$li = new LinkedIn(
+  array(
+    'api_key' => 'yourapikey', 
+    'api_secret' => 'yourapisecret', 
+    'callback_url' => 'https://yourdomain.com/redirecthere',
+    'curl_options' => array(
+        CURLOPT_PROXY => '127.0.0.1:80',
+    ),
+  )
+);
+```
