@@ -147,6 +147,17 @@ class LinkedIn
     }
 
     /**
+     * Check if the access token has already been set.
+     * If not we need to login or call setAccessToken
+     *
+     * @return boolean
+     */
+    public function hasAccessToken()
+    {
+        return !empty($this->_access_token);
+    }
+
+    /**
      * Set the state manually. State is a unique identifier for the user
      *
      * @param string $state
