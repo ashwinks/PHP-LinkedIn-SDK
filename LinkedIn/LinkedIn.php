@@ -240,6 +240,7 @@ class LinkedIn
         $concat = (stristr($endpoint,'?') ? '&' : '?');
         $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat . 'oauth2_access_token=' . $this->getAccessToken();
         $headers[] = 'x-li-format: json';
+        $headers[] = 'Authorization: Bearer ' . $this->getAccessToken();
 
         return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);
     }
