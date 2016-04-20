@@ -238,7 +238,7 @@ class LinkedIn
     public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
         $concat = (stristr($endpoint,'?') ? '&' : '?');
-        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat . 'oauth2_access_token=' . $this->getAccessToken();
+        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat;
         $headers[] = 'x-li-format: json';
         $headers[] = 'Authorization: Bearer ' . $this->getAccessToken();
 
