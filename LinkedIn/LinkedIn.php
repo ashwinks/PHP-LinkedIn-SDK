@@ -194,7 +194,7 @@ class LinkedIn
      * @param array $payload
      * @return array
      */
-    public function post($endpoint, array $payload = array())
+    public function post($endpoint, $payload = array())
     {
         return $this->fetch($endpoint, $payload, self::HTTP_METHOD_POST);
     }
@@ -218,7 +218,7 @@ class LinkedIn
      * @param array $payload
      * @return array
      */
-    public function put($endpoint, array $payload = array())
+    public function put($endpoint, $payload = array())
     {
         return $this->fetch($endpoint, $payload, self::HTTP_METHOD_PUT);
     }
@@ -235,7 +235,7 @@ class LinkedIn
      * @param array $curl_options
      * @return array
      */
-    public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
+    public function fetch($endpoint, $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
         $concat = (stristr($endpoint,'?') ? '&' : '?');
         $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat;
@@ -266,7 +266,7 @@ class LinkedIn
      * @throws \RuntimeException
      * @return array
      */
-    protected function _makeRequest($url, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
+    protected function _makeRequest($url, $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
         $ch = $this->_getCurlHandle();
 
