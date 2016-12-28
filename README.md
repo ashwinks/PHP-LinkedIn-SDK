@@ -62,7 +62,7 @@ If you already have a valid access token stored, you may omit the setting ```cal
 
 #### 1. Use ```setCallbackUrl()``` for set the callback url after the instantiation.
 ```php
-$li->setCallbackUrl('http://example.com');
+$li->setCallbackUrl('https://yourdomain.com/redirecthere');
 ```
 
 #### 2. Use as parameter on methods while in authentication flow.
@@ -70,8 +70,8 @@ $li->setCallbackUrl('http://example.com');
 > The passed parameter must be the same for both methods below!
 
 ```php
-$my_callback_url = 'http://example.com';
+$callback_url = 'https://yourdomain.com/redirecthere';
 
-$url = $li->getLoginUrl($my_scopes, $my_callback_url); // $my_scopes is the array of SCOPES
-$token = $li->getAccessToken($_REQUEST['code'], $my_callback_url);
+$url = $li->getLoginUrl($scopes, $callback_url); // $scopes is the array of SCOPES
+$token = $li->getAccessToken($_REQUEST['code'], $callback_url);
 ```
