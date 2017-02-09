@@ -12,7 +12,7 @@ class LinkedIn
     private $_curl_handle = null;
 
     const API_BASE = 'https://api.linkedin.com/v1';
-    const OAUTH_BASE = 'https://www.linkedin.com/uas/oauth2';
+    const OAUTH_BASE = 'https://www.linkedin.com/oauth/v2';
 
     const SCOPE_BASIC_PROFILE = 'r_basicprofile'; // Name, photo, headline, and current positions
     const SCOPE_FULL_PROFILE = 'r_fullprofile'; // Full profile including experience, education, skills, and recommendations
@@ -237,7 +237,7 @@ class LinkedIn
      */
     public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
-        $concat = (stristr($endpoint,'?') ? '&' : '?');
+        $concat = (stristr($endpoint, '?') ? '&' : '?');
         $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat;
         $headers[] = 'x-li-format: json';
         $headers[] = 'Authorization: Bearer ' . $this->getAccessToken();
@@ -289,6 +289,9 @@ class LinkedIn
             } else {
                 $options[CURLOPT_URL] .= '&' . http_build_query($payload, '&');
             }
+        } else {
+            $headers[] = 'Content-Length: 0';
+            $options[CURLOPT_HTTPHEADER] = $headers;
         }
 
         if (!empty($curl_options)) {
