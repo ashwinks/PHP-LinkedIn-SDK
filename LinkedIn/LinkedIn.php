@@ -21,6 +21,7 @@ class LinkedIn
     const SCOPE_CONTACT_INFO = 'r_contactinfo'; // Address, phone number, and bound accounts
     const SCOPE_READ_WRITE_UPDATES = 'rw_nus'; // Retrieve and post updates to LinkedIn as you
     const SCOPE_READ_WRITE_GROUPS = 'rw_groups'; // Retrieve and post group discussions as you
+    const SCOPE_READ_WRITE_COMPANY_ADMIN = 'rw_company_admin'; // Administers a company as you
     const SCOPE_WRITE_MESSAGES = 'w_messages'; // Send messages and invitations to connect as you
     const SCOPE_WRITE_SHARE = 'w_share'; // Share url to your contacts
 
