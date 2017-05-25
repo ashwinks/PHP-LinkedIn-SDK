@@ -31,7 +31,7 @@ class LinkedIn
     const HTTP_METHOD_DELETE = 'DELETE';
 
     /**
-     * @param array $config (api_key, api_secret, callback_url)
+     * @param array $config (api_key, api_secret, callback_url [optional])
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
@@ -45,7 +45,7 @@ class LinkedIn
             throw new \InvalidArgumentException('Invalid api secret - make sure api_secret is defined in the config array');
         }
 
-        if (!isset($config['callback_url']) || empty($config['callback_url'])) {
+        if (isset($config['callback_url']) && empty($config['callback_url'])) {
             throw new \InvalidArgumentException('Invalid callback url - make sure callback_url is defined in the config array');
         }
 
@@ -57,14 +57,38 @@ class LinkedIn
     }
 
     /**
+     * Set the callback url after the instance is already created.
+     *
+     * @param string $callback_url
+     */
+    public function setCallbackUrl($callback_url = null)
+    {
+        if (empty($callback_url)) {
+            throw new \InvalidArgumentException('Invalid callback url - it should be set to login the user or get a new token');
+        }
+
+        $this->_config['callback_url'] = (string) $callback_url;
+    }
+
+    /**
      * Get the login url, pass scope to request specific permissions
      *
      * @param array $scope - an array of requested permissions (can use scope constants defined in this class)
      * @param string $state - a unique identifier for this user, if none is passed, one is generated via uniqid
+     * @param string $callback_url - if empty, the callback url from config array set at constructor or using setCallbackUrl() must be set
+     * @throws \InvalidArgumentException
      * @return string $url
      */
-    public function getLoginUrl(array $scope = array(), $state = null)
+    public function getLoginUrl(array $scope = array(), $state = null, $callback_url = null)
     {
+        if (empty($callback_url)) {
+            if (!isset($this->_config['callback_url']) || empty($this->_config['callback_url'])) {
+                throw new \InvalidArgumentException('Invalid callback url. Inform the "callback_url" parameter');
+            }
+
+            $callback_url = $this->_config['callback_url'];
+        }
+
         if (!empty($scope)) {
             $scope = implode('%20', $scope);
         }
@@ -74,7 +98,7 @@ class LinkedIn
         }
         $this->setState($state);
 
-        $url = self::OAUTH_BASE . "/authorization?response_type=code&client_id={$this->_config['api_key']}&scope={$scope}&state={$state}&redirect_uri=" . urlencode($this->_config['callback_url']);
+        $url = self::OAUTH_BASE . "/authorization?response_type=code&client_id={$this->_config['api_key']}&scope={$scope}&state={$state}&redirect_uri=" . urlencode($callback_url);
 
         return $url;
     }
@@ -83,18 +107,27 @@ class LinkedIn
      * Exchange the authorization code for an access token
      *
      * @param string $authorization_code
+     * @param string $callback_url - if empty, the callback url from config array set at constructor or using setCallbackUrl() must be set
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @return string $access_token
      */
-    public function getAccessToken($authorization_code = null)
+    public function getAccessToken($authorization_code = null, $callback_url = null)
     {
         if (!empty($this->_access_token)) {
             return $this->_access_token;
         }
 
+        if (empty($callback_url)) {
+            if (!isset($this->_config['callback_url']) || empty($this->_config['callback_url'])) {
+                throw new \InvalidArgumentException('Invalid callback url. Inform the "callback_url" parameter');
+            }
+
+            $callback_url = $this->_config['callback_url'];
+        }
+
         if (empty($authorization_code)) {
-            throw new \InvalidArgumentException('Invalid authorization code. Pass in the "code" parameter from your callback url');
+            throw new \InvalidArgumentException('Invalid authorization code. Pass the "code" parameter from your callback url');
         }
 
         $params = array(
@@ -102,7 +135,7 @@ class LinkedIn
             'code' => $authorization_code,
             'client_id' => $this->_config['api_key'],
             'client_secret' => $this->_config['api_secret'],
-            'redirect_uri' => $this->_config['callback_url']
+            'redirect_uri' => $callback_url
         );
 
         /** Temp bug fix as per https://developer.linkedin.com/comment/28938#comment-28938 **/
