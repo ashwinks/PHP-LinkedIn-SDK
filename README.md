@@ -1,4 +1,4 @@
-** Note - Would someone like to take over this project? Unfortunatley I haven't worked on any projects that require LinkedIn data in a couple years. Because of that, it's hard to find the time to test pull requests and keep up to date w/ LI's API.
+**** Would someone like to take over this project? Unfortunatley I haven't worked on any projects that require LinkedIn data in a couple years. Because of that, it's hard to find the time to test pull requests and keep up to date w/ LI's API. ****
 
 PHP-LinkedIn-SDK
 ================
